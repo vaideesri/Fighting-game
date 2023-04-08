@@ -19,8 +19,8 @@ const Player = queryParams.get('cid') ? {
 
 
 
- canvas.width = 1024
- canvas.height = 576
+canvas.width = 1024
+canvas.height = 576
 
 c.fillRect(0, 0, canvas.width, canvas.height)
 
@@ -297,7 +297,7 @@ console.log('socket', socket);
 socket.addEventListener('message', (event) => {
     console.log('event', event);
     // Update game state based on message
-    let movePlayer = Player.type != 'Player 1'?player:enemy;
+    let movePlayer = Player.type != 'Player 1' ? player : enemy;
     switch (event.data) {
         case 'Allow Start Game':
             allowStartGame();
@@ -305,25 +305,76 @@ socket.addEventListener('message', (event) => {
         case 'Start':
             startGameDialog.close();
             startGame();
-
-        case 'ArrowRight':
-            if(Player.type == 'Player 1'){ 
+            break;
+        case 'ArrowRightDown':
+            if (Player.type == 'Player 1') {
                 keys.ArrowRight.pressed = true
                 movePlayer.lastKey = 'ArrowRight'
-            }else{
+            } else {
                 keys.d.pressed = true
                 movePlayer.lastKey = 'd'
             }
+            break;
+        case 'ArrowLeftDown':
+            if (Player.type == 'Player 1') {
+                keys.ArrowLeft.pressed = true
+                movePlayer.lastKey = 'ArrowLeft'
+            } else {
+                keys.a.pressed = true
+                movePlayer.lastKey = 'a'
+            }
+            break;
+
+        case 'ArrowRightUp':
+            if (Player.type == 'Player 1') {
+                keys.ArrowRight.pressed = false
+            } else {
+                keys.d.pressed = false
+            }
+            break
+        case 'ArrowLeftUp':
+            if (Player.type == 'Player 1') {
+                keys.ArrowLeft.pressed = false;
+            } else {
+                keys.a.pressed = false;
+            }
+            break
+        case 'ArrowUpDown':
+        case 'ArrowUpUp':
+            movePlayer.velocity.y = -20
+            break
+        case 'ArrowDownUp':
+        case 'ArrowDownDown':
+            movePlayer.attack()
+
+            break
+    }
+});
+
+
+window.addEventListener('keydown', (event) => {
+    let movePlayer = Player.type == 'Player 1' ? player : enemy;
+
+    if (!movePlayer.dead) {
+        switch (event.key) {
+            case 'ArrowRight':
+                if (Player.type != 'Player 1') {
+                    keys.ArrowRight.pressed = true
+                    movePlayer.lastKey = 'ArrowRight';
+                } else {
+                    keys.d.pressed = true
+                    movePlayer.lastKey = 'd'
+                }
+
                 break
             case 'ArrowLeft':
-                if(Player.type == 'Player 1'){ 
+
+                if (Player.type != 'Player 1') {
                     keys.ArrowLeft.pressed = true
                     movePlayer.lastKey = 'ArrowLeft'
-                    keys.ArrowLeft.pressed = false;
-                }else{
+                } else {
                     keys.a.pressed = true
                     movePlayer.lastKey = 'a'
-                    keys.a.pressed = false;
                 }
                 break
             case 'ArrowUp':
@@ -333,47 +384,9 @@ socket.addEventListener('message', (event) => {
                 movePlayer.attack()
 
                 break
-    }
-});
-
-
-window.addEventListener('keydown', (event) => {
-    let movePlayer = Player.type == 'Player 1'?player:enemy;
-    
-    if (!movePlayer.dead) {
-        switch (event.key) {
-            case 'ArrowRight':
-                if(Player.type != 'Player 1'){ 
-                keys.ArrowRight.pressed = true
-                movePlayer.lastKey = 'ArrowRight';
-                keys.ArrowRight.pressed = false;
-            }else{
-                keys.d.pressed = true
-                movePlayer.lastKey = 'd'
-                keys.d.pressed = false;
-            }
-
-                break
-            case 'ArrowLeft':
-                
-            if(Player.type != 'Player 1'){ 
-                keys.ArrowLeft.pressed = true
-                movePlayer.lastKey = 'ArrowLeft'
-            }else{
-                keys.a.pressed = true
-                movePlayer.lastKey = 'a'
-            }
-                break
-            case 'ArrowUp':
-                movePlayer.velocity.y = -20
-                break
-            case 'ArrowDown':
-                movePlayer.attack()
-
-                break
         }
-    
-        socket.send(event.key);
+
+        socket.send(event.key + 'Down');
     }
 })
 
@@ -381,47 +394,56 @@ window.addEventListener('keyup', (event) => {
     // enemy keys
     switch (event.key) {
         case 'ArrowRight':
-            keys.ArrowRight.pressed = false
+            if (Player.type != 'Player 1') {
+                keys.ArrowRight.pressed = false;
+            } else {
+                keys.d.pressed = false;
+            }
             break
         case 'ArrowLeft':
-            keys.ArrowLeft.pressed = false
+            if (Player.type != 'Player 1') {
+                keys.ArrowLeft.pressed = false
+            } else {
+                keys.a.pressed = false;
+            }
             break
     }
+    socket.send(event.key + 'Up');
 })
 
 
 function startGame() {
-    if(Player.type == 'Player 1'){
+    if (Player.type == 'Player 1') {
         socket.send('Start');
     }
     decreaseTimer();
     animate();
 }
 
-const newGame = function(){
+const newGame = function () {
     startGameDialog.showModal();
 }
 
-const loadGame = function(){
+const loadGame = function () {
     newGameDialog.showModal();
 }
 
-const allowStartGame = function(){
+const allowStartGame = function () {
     dialogContext.innerText = 'Lets Start !!!'
     dialogButton.hidden = false;
 }
 
 
-const startUp = function(){
-    if(Player.type == 'Player 1'){
-    loadGame();
+const startUp = function () {
+    if (Player.type == 'Player 1') {
+        loadGame();
     }
 
-    if(Player.type == 'Player 2'){
+    if (Player.type == 'Player 2') {
         newGame();
         dialogContext.innerText = 'Please wait for player 1 to start the game';
     }
-    
+
 
 }
 startUp();
