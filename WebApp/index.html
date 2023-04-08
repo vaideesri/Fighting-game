@@ -1,0 +1,173 @@
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- <link
+    href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+    rel="stylesheet"
+  /> -->
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Press Start 2P', cursive;
+      background-color: black;
+    }
+    dialog{
+    
+      background:#ffffff;
+      color:rgb(0, 238, 255);
+    
+    }
+    .align-center{
+      text-align: center;
+    }
+    .padding-1{
+      padding: 0.5vw;
+    }
+    button{
+      color: azure;
+    }
+    .min-width-55{
+      min-width: 55vw;
+    }
+    .width-100{
+      width: 100% !important;
+    }
+    .aspect-ratio-2_2{
+      aspect-ratio: 2.2;
+    }
+  </style>
+</head>
+<body>
+
+  <dialog id="newGameDialog">
+    <form method="dialog" class="align-center min-width-55">
+      <p class="padding-1">
+        Battle Round
+      </p>
+      <div class="align-center padding-1">
+        <button type="submit" onclick="newGame()">New Game</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="startGameDialog">
+    <form method="dialog" class="align-center min-width-55">
+      <p class="padding-1" id ="dialogContext">
+        Please wait for the Player 2 to join...
+      </p>
+      <div class="align-center padding-1">
+        <button type="submit" hidden id="dialogButton" onclick="startGame()">Start Game</button>
+      </div>
+    </form>
+  </dialog>
+  
+
+  <!-- red container div -->
+  <div style="position: relative; display: inline-block " class="width-100">
+    <!-- smaller red container div -->
+    <div
+      style="
+        position: absolute;
+        display: flex;
+        width: 100%;
+        align-items: center;
+        padding: 20px;
+      "
+    >
+      <!-- player health -->
+      <div
+        style="
+          position: relative;
+          width: 100%;
+          display: flex;
+          justify-content: flex-end;
+          border: 4px solid white;
+          ;
+        "
+      >
+        <div style="background-color: red; height: 30px; width: 100%"></div>
+        <div
+          id="playerHealth"
+          style="
+            position: absolute;
+            background: white;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+          "
+        ></div>
+      </div>
+
+      <!-- timer -->
+      <div
+        id="timer"
+        style="
+          background-color: black;
+          width: 100px;
+          height: 50px;
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #00fff2;
+          border: 4px solid white;
+          font-style: italic;
+        "
+      >
+        0
+      </div>
+      <!-- enemy health -->
+      <div
+        style="
+          position: relative;
+          width: 100%;
+          border: 4px solid white;
+          
+        "
+      >
+        <div style="background-color: red; height: 30px"></div>
+        <div
+          id="enemyHealth"
+          style="
+            position: absolute;
+            background: white;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+          "
+        ></div>
+      </div>
+      <div></div>
+    </div>
+    <div
+      id="displayText"
+      style="
+        position: absolute;
+        color:white;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: none;
+        font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;"
+    >
+      TIE
+      
+    </div>
+    <div><canvas id="canvas" class="width-100 aspect-ratio-2_2"></canvas></div>
+  </div>
+
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"
+    integrity="sha512-H6cPm97FAsgIKmlBA4s774vqoN24V5gSQL4yBTDOY2su2DeXZVhQPxFK4P6GPdnZqM9fg1G3cMv5wD7e6cFLZQ=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  ></script>
+  <script src="js/utils.js"></script>
+  <script src="js/classes.js"></script>
+  <script src="index.js"></script>
+</body>
